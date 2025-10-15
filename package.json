@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "node test/test.js",
-    "lint": "npx eslint ."
+    "lint": "npx --no-install eslint ."
   },
   "dependencies": {
     "axios": "^1.12.2",

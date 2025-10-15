@@ -9,10 +9,26 @@
   },
   "dependencies": {
     "axios": "^1.12.2",
-    "body-parser": "^1.20.2",
+    "body-parser": "^1.20.3",
     "express": "^4.21.2"
   },
   "devDependencies": {
-    "eslint": "^8.52.0"
-  }
+    "eslint": "^8.57.1",
+    "nodemon": "^3.1.10"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anup1104/todo-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anup1104/todo-api/issues"
+  },
+  "homepage": "https://github.com/anup1104/todo-api#readme",
+  "description": ""
 }

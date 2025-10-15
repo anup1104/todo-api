@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "node test/test.js",
-    "lint": "npx --no-install eslint ."
-  },
+  "start": "node app.js",
+  "test": "node test/test.js",
+  "lint": "eslint ."
+},
+
   "dependencies": {
     "axios": "^1.12.2",
     "body-parser": "^1.20.3",

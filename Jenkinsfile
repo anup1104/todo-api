@@ -30,20 +30,23 @@ pipeline {
       }
     }
 
-    stage('Build Docker Image') {
-      steps {
-        script {
-          bat '''
-            docker --version >nul 2>&1
-            if %errorlevel%==0 (
-              docker build -t %IMAGE_NAME%:%DOCKER_TAG% .
-            ) else (
-              echo Docker not available on agent, skipping docker build.
-            )
-          '''
-        }
-      }
+    stage('Deploy (local run)') {
+  steps {
+    script {
+      bat '''
+        docker --version >nul 2>&1
+        if %errorlevel%==0 (
+          for /f "tokens=*" %%i in ('docker ps -q --filter "publish=3000"') do docker stop %%i
+          docker rm -f demo-app 2>nul || echo No existing container to remove.
+          docker run -d --name demo-app -p 3000:3000 %IMAGE_NAME%:%DOCKER_TAG%
+          echo App running on host:3000
+        ) else (
+          echo Docker not available on agent; can't run container.
+        )
+      '''
     }
+  }
+}
 
     stage('Deploy (local run)') {
       steps {

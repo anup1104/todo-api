@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    IMAGE_NAME = "simple-ci-cd-demo" // used if building docker
+    IMAGE_NAME = "simple-ci-cd-demo"
     DOCKER_TAG = "${env.BUILD_NUMBER}"
   }
 
@@ -15,17 +15,17 @@ pipeline {
 
     stage('Install') {
       steps {
-        sh 'npm ci'
+        bat 'npm ci'
       }
     }
 
     stage('Test') {
       steps {
-        sh 'npm test'
+        bat 'npm test'
       }
       post {
         always {
-          junit allowEmptyResults: true, testResults: '**/test-results.xml' // optional if you generate junit results
+          junit allowEmptyResults: true, testResults: '**/test-results.xml'
         }
       }
     }
@@ -33,13 +33,13 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          // Only build if docker is available on Jenkins agent
-          sh '''
-            if docker --version >/dev/null 2>&1; then
-              docker build -t ${IMAGE_NAME}:${DOCKER_TAG} .
-            else
-              echo "Docker not available on agent, skipping docker build."
-            fi
+          bat '''
+            docker --version >nul 2>&1
+            if %errorlevel%==0 (
+              docker build -t %IMAGE_NAME%:%DOCKER_TAG% .
+            ) else (
+              echo Docker not available on agent, skipping docker build.
+            )
           '''
         }
       }
@@ -48,15 +48,15 @@ pipeline {
     stage('Deploy (local run)') {
       steps {
         script {
-          sh '''
-            if docker --version >/dev/null 2>&1; then
-              # stop existing container (if any) and run latest
-              docker rm -f demo-app || true
-              docker run -d --name demo-app -p 3000:3000 ${IMAGE_NAME}:${DOCKER_TAG}
-              echo "App running on host:3000"
-            else
-              echo "Docker not available on agent; can't run container."
-            fi
+          bat '''
+            docker --version >nul 2>&1
+            if %errorlevel%==0 (
+              docker rm -f demo-app 2>nul || echo No existing container to remove.
+              docker run -d --name demo-app -p 3000:3000 %IMAGE_NAME%:%DOCKER_TAG%
+              echo App running on host:3000
+            ) else (
+              echo Docker not available on agent; can't run container.
+            )
           '''
         }
       }

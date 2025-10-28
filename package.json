@@ -1,0 +1,20 @@
+{
+  "name": "simple-ci-cd-demo",
+  "version": "1.0.0",
+  "description": "Small Express app to demo CI/CD with GitHub Actions and Jenkins",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "jest --runInBand",
+    "lint": "echo \"no lint configured\""
+  },
+  "author": "you",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "supertest": "^6.3.0"
+  }
+}

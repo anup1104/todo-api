@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: simple-ci-cd-demo
+      DOCKER_TAG: ${{ github.run_number }}
+
+    steps:
+      # 🧾 1️⃣ Checkout Code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ⚙️ 2️⃣ Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 📦 3️⃣ Install Dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 🧪 4️⃣ Run Tests
+      - name: Run tests
+        run: npm test
+
+      # 🐳 5️⃣ Build Docker Image
+      - name: Build Docker image
+        run: docker build -t $IMAGE_NAME:$DOCKER_TAG .
+
+      # 🚀 6️⃣ (Optional) Run Container for Local Deployment
+      - name: Run Docker container
+        run: |
+          docker ps -q --filter "name=demo-app" | grep -q . && docker rm -f demo-app || echo "No existing container"
+          docker run -d --name demo-app -p 3001:3000 $IMAGE_NAME:$DOCKER_TAG
+          echo "App running locally on port 3001"
